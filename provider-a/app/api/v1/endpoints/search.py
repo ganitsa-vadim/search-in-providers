@@ -15,5 +15,5 @@ router = fastapi.APIRouter()
 )
 async def search():
     response_a: list[dict] = await read_provider_response("response_a.json")
-    await asyncio.sleep(60)
+    await asyncio.sleep(20)
     return response_a
