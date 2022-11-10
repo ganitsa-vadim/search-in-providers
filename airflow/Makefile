@@ -17,35 +17,26 @@ $(VENV)/bin/activate:
 	$(PYTHON) -m pip install pipenv==2022.1.8
 	$(PYTHON) -m pipenv sync -d
 
-## Run airflow
-run-airflow: setup
+## Run app
+run: setup
 	. ./.env
-	$(PYTHON) -m airflow
-
-## Run airflow
-run-provider-a: setup
-	. ./.env
-	$(PYTHON) -m provider-a
-
-run-provider-b: setup
-	. ./.env
-	$(PYTHON) -m provider-b
+	$(PYTHON) -m app.api
 
 ## Analyze project source code for slylistic errors
 lint: setup
-	$(PYTHON) -m flake8 airflow provider-a provider-b
+	$(PYTHON) -m flake8 app
 
 ## Analyze project source code for typing errors
 type: setup
-	$(PYTHON) -m mypy airflow provider-a provider-b
+	$(PYTHON) -m mypy app
 
 ## Run flake8
 flake8: setup
-	$(PYTHON) -m flake8 airflow provider-a provider-b
+	$(PYTHON) -m flake8 app
 
 ## Run mypy
 mypy: setup
-	$(PYTHON) -m mypy airflow provider-a provider-b
+	$(PYTHON) -m mypy app
 
 ## Run project tests
 test: setup

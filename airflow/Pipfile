@@ -5,8 +5,9 @@ name = "pypi"
 
 [packages]
 fastapi = "==0.74.1"
-uvicorn = {extras = ["standard"], version = "==0.17.5"}
-
+uvicorn = { extras = ["standard"], version = "==0.17.5" }
+aioredis = "==2.0.1"
+xmltodict = "==0.13.0"
 
 [dev-packages]
 asgi-lifespan = "==1.0.1"
