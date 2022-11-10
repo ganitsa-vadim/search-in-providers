@@ -5,7 +5,7 @@ from ..core import config
 
 def main():
     uvicorn.run(
-        'provider-a.api:app',
+        'app.api:app',
         host=config.api.host,
         port=config.api.port,
         log_level=config.api.log_level,
