@@ -4,12 +4,12 @@ import typing
 import pydantic
 
 
-ENV_PREFIX = 'provider_a'
+ENV_PREFIX = 'airflow'
 ENV_FILENAME = '.env'
 
 
 class APISettings(pydantic.BaseSettings):
-    host: str = '127.0.0.1'
+    host: str = '0.0.0.0'
     port: int = 9000
     log_level: str = 'info'
     title: str = 'Airflow service'

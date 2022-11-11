@@ -10,7 +10,6 @@ from app.core import config
 from app.redis_client import RedisClient
 from app.schemas.redis import SearchResults
 
-
 router = fastapi.APIRouter()
 
 
@@ -52,7 +51,7 @@ async def results(search_id: str, currency: str):
     return target_data
 
 
-@router.post('/run-task/{search_id}', status_code=200)
+@router.post('/run-task/{search_id}', status_code=200, include_in_schema=False)
 async def task(search_id: str):
     redis_client = RedisClient(
         url=config.redis.url,

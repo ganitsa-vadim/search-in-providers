@@ -9,5 +9,5 @@ WORKDIR /app
 RUN make setup
 
 COPY . /app
-EXPOSE 8000
+EXPOSE 8001
 CMD make run

@@ -4,16 +4,15 @@ services:
   airflow:
     build: ./airflow
     restart: unless-stopped
-    ports:
-      - "9000:8000"
+    network_mode: host
   provider-a:
     build: ./provider-a
     restart: unless-stopped
     ports:
-      - "5000:8000"
+      - "8000:8000"
   provider-b:
     build: ./provider-b
     restart: unless-stopped
     ports:
-      - "5001:8000"
+      - "8001:8001"
 
