@@ -37,6 +37,8 @@ For dependencies management [pipenv](https://pipenv.pypa.io/) is being used.
 
 ### Run
 
+create .env files
+
 ### Run in docker-compose
 
 `docker-compose up`
