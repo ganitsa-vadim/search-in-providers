@@ -3,7 +3,7 @@ from fastapi import FastAPI
 from app import service
 from app.api import v1
 from app.core import config
-from app.redis_client import RedisClient
+from app.redis_client import redis_client
 
 
 app = FastAPI(
@@ -17,10 +17,6 @@ app.include_router(v1.api_router, prefix='/api/v1')
 
 @app.on_event("startup")
 async def startup():
-    redis_client = RedisClient(
-        url=config.redis.url,
-        db_number=0,
-    )
     await service.update_exchange_rates(redis_client=redis_client)
 
 

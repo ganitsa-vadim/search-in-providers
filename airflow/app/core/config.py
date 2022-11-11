@@ -9,7 +9,7 @@ ENV_FILENAME = '.env'
 
 
 class APISettings(pydantic.BaseSettings):
-    host: str = '0.0.0.0'
+    host: str = '0.0.0.0'  # noqa S104
     port: int = 9000
     log_level: str = 'info'
     title: str = 'Airflow service'
@@ -23,7 +23,8 @@ class APISettings(pydantic.BaseSettings):
 
 
 class RedisSettings(pydantic.BaseSettings):
-    url: str = "redis://172.17.0.2"
+    host: str = "127.0.0.1"
+    port: int = 10000
     db: int = 0
 
     class Config:

@@ -2,6 +2,7 @@ import json
 
 import aioredis
 
+from app.core import config
 from app.schemas import redis as redis_schemas
 from app.schemas import response
 from app.schemas.exchange_rates import NationalBankResponse
@@ -35,6 +36,14 @@ class RedisClient:
             value=updated_record.json(),
         )
 
+    async def mark_record_completed(self, search_id: str):
+        record: redis_schemas.SearchResults = await self.read_record(search_id=search_id)
+        record.status = str(redis_schemas.SearchStatusTypes.COMPLETED)
+        await self.client.set(
+            name=search_id,
+            value=record.json(),
+        )
+
     async def read_record(self, search_id: str) -> redis_schemas.SearchResults:
         record = await self.client.get(search_id)
         unpacked_record = json.loads(record)
@@ -60,3 +69,9 @@ class RedisClient:
         else:
             record.items += items
         return record
+
+
+redis_client = RedisClient(
+    url=f'redis://{config.redis.host}:{config.redis.port}',
+    db_number=0,
+)

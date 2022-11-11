@@ -7,8 +7,8 @@ import pydantic
 import requests
 import xmltodict
 
-from app.core import config
 from app.redis_client import RedisClient
+from app.redis_client import redis_client
 from app.schemas.exchange_rates import Item
 from app.schemas.exchange_rates import NationalBankResponse
 from app.schemas.redis import SearchResults
@@ -56,7 +56,7 @@ def create_tasks(
     return tasks
 
 
-async def run_tasks(search_id, redis_client):
+async def run_tasks(search_id, redis_client: RedisClient):
     async with aiohttp.ClientSession() as session:
         tasks = create_tasks(
             session=session,
@@ -99,10 +99,6 @@ def add_price_field_and_sort_data_by_price(
 
 @aiocron.crontab('* 12 * * *')
 async def scheduled_tasks():
-    redis_client = RedisClient(
-        url=config.redis.url,
-        db_number=0,
-    )
     await update_exchange_rates(redis_client=redis_client)
 
 

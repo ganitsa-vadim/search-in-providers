@@ -15,4 +15,9 @@ services:
     restart: unless-stopped
     ports:
       - "8001:8001"
-
+  redis:
+    image: 'bitnami/redis:latest'
+    ports:
+      - "10000:6379"
+    environment:
+      - ALLOW_EMPTY_PASSWORD=yes
