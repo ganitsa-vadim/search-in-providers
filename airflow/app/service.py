@@ -1,18 +1,19 @@
-import aiohttp
+import asyncio
 import json
 
+import aiocron
+import aiohttp
 import pydantic
 import requests
 import xmltodict
 
 from app.core import config
-from app.schemas.exchange_rates import NationalBankResponse, Item
-from app.schemas.redis import SearchResults
-from app.schemas.response import FlightInfo, Price
 from app.redis_client import RedisClient
-import asyncio
-
-import aiocron
+from app.schemas.exchange_rates import Item
+from app.schemas.exchange_rates import NationalBankResponse
+from app.schemas.redis import SearchResults
+from app.schemas.response import FlightInfo
+from app.schemas.response import Price
 
 
 async def send_response_and_write_to_redis(
@@ -85,7 +86,7 @@ def add_price_field_and_sort_data_by_price(
             currency_price = kzt_price / target_currency.description * target_currency.quant
         else:
             current_currency = exchange_rates_dict[item.pricing.currency]
-            kzt_price = (item.pricing.total * current_currency.description) / current_currency.quant
+            kzt_price = (item.pricing.total * current_currency.description) / current_currency.quant # noqa E501
             currency_price = kzt_price / target_currency.description * target_currency.quant
 
         item.price = Price(

@@ -2,8 +2,9 @@ import asyncio
 
 import fastapi
 
-from app.service import read_provider_response
 from app.schemas import response
+from app.service import read_provider_response
+
 
 router = fastapi.APIRouter()
 

@@ -1,7 +1,8 @@
 from fastapi import FastAPI
 
-from ..core import config
-from . import v1
+from app.api import v1
+from app.core import config
+
 
 app = FastAPI(
     title=config.api.title,

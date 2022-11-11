@@ -1,5 +1,6 @@
-import aiofiles
 import json
+
+import aiofiles
 
 
 async def read_provider_response(

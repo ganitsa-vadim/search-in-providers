@@ -1,13 +1,10 @@
 from fastapi import FastAPI
 
-from ..core import config
-from . import v1
-from ..redis_client import RedisClient
-import xmltodict
-import requests
-from ..schemas.exchange_rates import NationalBankResponse, Item
 from app import service
-import aiocron
+from app.api import v1
+from app.core import config
+from app.redis_client import RedisClient
+
 
 app = FastAPI(
     title=config.api.title,

@@ -2,13 +2,14 @@ import uuid
 
 import fastapi
 import requests
+from fastapi import responses
+from fastapi import status
 
+from app import service
 from app.core import config
 from app.redis_client import RedisClient
-from app import service
 from app.schemas.redis import SearchResults
-from fastapi import status
-from fastapi import responses
+
 
 router = fastapi.APIRouter()
 
@@ -16,7 +17,10 @@ router = fastapi.APIRouter()
 @router.post('/')
 async def search(background_tasks: fastapi.BackgroundTasks) -> responses.JSONResponse:
     search_id: str = str(uuid.uuid4())
-    background_tasks.add_task(requests.post, f"http://127.0.0.1:9000/api/v1/search/run-task/{search_id}")
+    background_tasks.add_task(
+        func=requests.post,
+        url=f"http://127.0.0.1:9000/api/v1/search/run-task/{search_id}",
+    )
     return responses.JSONResponse(
         content={"search_id": search_id},
         status_code=status.HTTP_200_OK,

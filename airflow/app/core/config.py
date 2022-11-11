@@ -3,6 +3,7 @@ import typing
 
 import pydantic
 
+
 ENV_PREFIX = 'provider_a'
 ENV_FILENAME = '.env'
 
@@ -24,6 +25,7 @@ class APISettings(pydantic.BaseSettings):
 class RedisSettings(pydantic.BaseSettings):
     url: str = "redis://172.17.0.2"
     db: int = 0
+
     class Config:
         env_file = ENV_FILENAME
         env_prefix = f'{ENV_PREFIX}_redis_'

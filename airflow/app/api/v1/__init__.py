@@ -1,1 +1,1 @@
-from .routers import api_router
+from .routers import api_router  # noqa: F401

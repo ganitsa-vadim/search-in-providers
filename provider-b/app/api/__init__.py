@@ -3,6 +3,7 @@ from fastapi import FastAPI
 from ..core import config
 from . import v1
 
+
 app = FastAPI(
     title=config.api.title,
     docs_url=config.api.swagger_url,

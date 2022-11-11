@@ -1,8 +1,9 @@
 import json
 
 import aioredis
-from app.schemas import response
+
 from app.schemas import redis as redis_schemas
+from app.schemas import response
 from app.schemas.exchange_rates import NationalBankResponse
 
 
@@ -42,7 +43,7 @@ class RedisClient:
     async def set_exchange_rates(self, national_bank_response: NationalBankResponse):
         await self.client.set(
             name="exchange_rates",
-            value=national_bank_response.json()
+            value=national_bank_response.json(),
         )
 
     async def get_exchange_rates(self):
@@ -59,9 +60,3 @@ class RedisClient:
         else:
             record.items += items
         return record
-
-#
-# redis_client = RedisClient(
-#     url=config.redis.url,
-#     db_number=config.redis.db,
-# )

@@ -3,6 +3,7 @@ import typing
 
 import pydantic
 
+
 ENV_PREFIX = 'provider_b'
 ENV_FILENAME = '.env'
 
