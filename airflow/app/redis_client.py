@@ -3,6 +3,7 @@ import json
 import aioredis
 from app.schemas import response
 from app.schemas import redis as redis_schemas
+from app.schemas.exchange_rates import NationalBankResponse
 
 
 class RedisClient:
@@ -37,6 +38,16 @@ class RedisClient:
         record = await self.client.get(search_id)
         unpacked_record = json.loads(record)
         return redis_schemas.SearchResults(**unpacked_record)
+
+    async def set_exchange_rates(self, national_bank_response: NationalBankResponse):
+        await self.client.set(
+            name="exchange_rates",
+            value=national_bank_response.json()
+        )
+
+    async def get_exchange_rates(self):
+        exchange_rates = await self.client.get("exchange_rates")
+        return NationalBankResponse(**exchange_rates)
 
     def _process_items(
             self,
