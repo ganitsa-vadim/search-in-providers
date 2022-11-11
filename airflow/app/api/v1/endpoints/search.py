@@ -1,47 +1,38 @@
 import uuid
-import aiohttp
 import fastapi
-import asyncio
+import requests
+
+from app.core import config
+from app.redis_client import RedisClient
+from app import service
+from app.schemas.redis import SearchResults
 
 router = fastapi.APIRouter()
 
 
-def write_to_redis():
-    pass
-
-
-async def send_response_and_write_to_redis(
-        session: aiohttp.ClientSession,
-        url: str,
-        search_id: str,
-) -> str:
-    async with session.post(url) as resp:
-        content: str = await resp.text()
-
-        return content
-
-
-@router.post(
-    '/',
-    status_code=200,
-)
-async def search():
+@router.post('/', status_code=200)
+async def search(background_tasks: fastapi.BackgroundTasks) -> str:
     search_id: str = str(uuid.uuid4())
-    write_to_redis()
-    async with aiohttp.ClientSession() as session:
-        tasks = []
-        urls = [
-            'http://127.0.0.1:8000/api/v1/search/',
-            'http://127.0.0.1:8001/api/v1/search/',
-        ]
-        for url in urls:
-            task = asyncio.create_task(
-                coro=send_response_and_write_to_redis(
-                    session=session,
-                    url=url,
-                    search_id=search_id,
-                ),
-            )
+    background_tasks.add_task(requests.post, f"http://127.0.0.1:9000/api/v1/search/run-task/{search_id}")
+    return search_id
 
-            tasks.append(task)
-        await asyncio.gather(*tasks)
+
+@router.get('/results/{search_id}/{currency}', status_code=200)
+async def results(search_id: str, currency: str):
+    redis_client = RedisClient(
+        url=config.redis.url,
+        db_number=config.redis.db_search_results,
+    )
+    record: SearchResults = await redis_client.read_record(search_id=search_id)
+
+    return "Zaebis"
+
+
+@router.post('/run-task/{search_id}', status_code=200)
+async def task(search_id: str):
+    redis_client = RedisClient(
+        url=config.redis.url,
+        db_number=config.redis.db_search_results,
+    )
+    await redis_client.new_record(search_id=search_id)
+    await service.run_tasks(search_id, redis_client)

@@ -25,7 +25,7 @@ class RedisClient:
     async def update_record(
             self,
             search_id: str,
-            items: response.FlightInfo) -> None:
+            items: list[response.FlightInfo]) -> None:
         record: redis_schemas.SearchResults = await self.read_record(search_id=search_id)
         updated_record = self._process_items(record, items)
         await self.client.set(
@@ -41,10 +41,16 @@ class RedisClient:
     def _process_items(
             self,
             record: redis_schemas.SearchResults,
-            items: response.FlightInfo,
+            items: list[response.FlightInfo],
     ) -> redis_schemas.SearchResults:
         if not record.items:
             record.items = items
         else:
             record.items += items
         return record
+
+#
+# redis_client = RedisClient(
+#     url=config.redis.url,
+#     db_number=config.redis.db,
+# )
