@@ -17,7 +17,7 @@ class Rates(pydantic.BaseModel):
     description: str
     copyright: str
     date: str
-    items: list[Item] = pydantic.Field(alias="item")
+    item: list[Item]
 
 
 class NationalBankResponse(pydantic.BaseModel):

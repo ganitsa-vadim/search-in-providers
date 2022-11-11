@@ -5,7 +5,7 @@ from . import v1
 from ..redis_client import RedisClient
 import xmltodict
 import requests
-from ..schemas.exchange_rates import NationalBankResponse
+from ..schemas.exchange_rates import NationalBankResponse, Item
 
 app = FastAPI(
     title=config.api.title,
@@ -20,11 +20,19 @@ app.include_router(v1.api_router, prefix='/api/v1')
 async def startup():
     redis_client = RedisClient(
         url=config.redis.url,
-        db_number=7,
+        db_number=0,
     )
     xml_data = requests.get(url='https://www.nationalbank.kz/rss/get_rates.cfm?fdate=26.10.2021')
     parsed_xml: dict = xmltodict.parse(xml_data.content)
     national_bank_response: NationalBankResponse = NationalBankResponse(**parsed_xml)
+    national_bank_response.rates.item.append(Item(
+        fullname="КАЗАХСТАНСКИЙ ТЕНГЕ",
+        title='KZT',
+        description=1,
+        quant=1,
+        index="GOOD",
+        change=0,
+    ))
     await redis_client.set_exchange_rates(national_bank_response)
 
 

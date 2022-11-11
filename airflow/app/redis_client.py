@@ -47,7 +47,7 @@ class RedisClient:
 
     async def get_exchange_rates(self):
         exchange_rates = await self.client.get("exchange_rates")
-        return NationalBankResponse(**exchange_rates)
+        return NationalBankResponse(**json.loads(exchange_rates))
 
     def _process_items(
             self,

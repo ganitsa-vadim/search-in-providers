@@ -36,8 +36,14 @@ class Pricing(pydantic.BaseModel):
     currency: str
 
 
+class Price(pydantic.BaseModel):
+    amount: float
+    currency: str
+
+
 class FlightInfo(pydantic.BaseModel):
     flights: list[Flight]
     refundable: bool
     validating_airline: str
     pricing: Pricing
+    price: Price | None
