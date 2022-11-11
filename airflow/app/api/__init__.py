@@ -6,6 +6,8 @@ from ..redis_client import RedisClient
 import xmltodict
 import requests
 from ..schemas.exchange_rates import NationalBankResponse, Item
+from app import service
+import aiocron
 
 app = FastAPI(
     title=config.api.title,
@@ -22,18 +24,12 @@ async def startup():
         url=config.redis.url,
         db_number=0,
     )
-    xml_data = requests.get(url='https://www.nationalbank.kz/rss/get_rates.cfm?fdate=26.10.2021')
-    parsed_xml: dict = xmltodict.parse(xml_data.content)
-    national_bank_response: NationalBankResponse = NationalBankResponse(**parsed_xml)
-    national_bank_response.rates.item.append(Item(
-        fullname="КАЗАХСТАНСКИЙ ТЕНГЕ",
-        title='KZT',
-        description=1,
-        quant=1,
-        index="GOOD",
-        change=0,
-    ))
-    await redis_client.set_exchange_rates(national_bank_response)
+    await service.update_exchange_rates(redis_client=redis_client)
+
+
+@app.on_event('startup')
+async def start_scheduler():
+    service.scheduled_tasks.start()
 
 
 @app.on_event("shutdown")
