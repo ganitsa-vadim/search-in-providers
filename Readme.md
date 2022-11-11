@@ -37,7 +37,7 @@ For dependencies management [pipenv](https://pipenv.pypa.io/) is being used.
 
 ### Run
 
-create .env files
+create .env files, copy text from .env.example for each service
 
 ### Run in docker-compose
 
